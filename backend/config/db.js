@@ -14,6 +14,17 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+// Función para obtener una conexión sin especificar la base de datos
+// útil para crear la BD si no existe
+async function getRawConnection() {
+  const connection = await mysql.createConnection({
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+  });
+  return connection;
+}
+
 // Función para probar la conexión
 async function testConnection() {
   try {
@@ -29,5 +40,6 @@ async function testConnection() {
 
 module.exports = {
   pool,
+  getRawConnection,
   testConnection,
 };
