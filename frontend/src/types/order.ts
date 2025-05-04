@@ -1,7 +1,7 @@
-import { Product } from "./product";
+import { Producto } from "./product";
 
 // types/order.ts
-export type OrderStatus = 'Pendiente' | 'En cocina' | 'Entregado' | 'Cancelado';
+export type OrderStatus = "Pendiente" | "En cocina" | "Entregado" | "Cancelado";
 
 export interface Order {
   id_pedido: number;
@@ -18,5 +18,5 @@ export interface OrderDetail {
   id_producto: number;
   cantidad: number;
   precio_unitario: number;
-  producto?: Product; // Opcional para joins
+  producto?: Producto; // Opcional para joins
 }

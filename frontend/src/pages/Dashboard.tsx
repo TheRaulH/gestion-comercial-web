@@ -1,9 +1,7 @@
-import React, { Component } from 'react'
+import { Component } from "react";
 
 export class Dashboard extends Component {
   render() {
-    return (
-      <div>Dashboard</div>
-    )
+    return <div>Dashboard</div>;
   }
 }

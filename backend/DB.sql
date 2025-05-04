@@ -57,6 +57,7 @@ CREATE TABLE pedidos (
     id_arqueo INT NOT NULL,
     fecha_pedido DATETIME NOT NULL,
     total DECIMAL(10,2) NOT NULL,
+    forma_pago ENUM('Efectivo', 'Tarjeta', 'QR') NOT NULL,
     estado ENUM('Pendiente', 'En cocina', 'Entregado', 'Cancelado') DEFAULT 'Pendiente',
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
     FOREIGN KEY (id_arqueo) REFERENCES arqueos_caja(id_arqueo)

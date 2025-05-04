@@ -45,6 +45,7 @@ export const Login = () => {
           alignItems: "center",
         }}
       >
+        <img src="../../public/logo.png" className="p-4" width={150} />
         <Typography component="h1" variant="h5">
           Iniciar Sesión
         </Typography>

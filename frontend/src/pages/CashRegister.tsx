@@ -84,7 +84,7 @@ export const CashRegister = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom color="primary">
         Caja Registradora
       </Typography>
 

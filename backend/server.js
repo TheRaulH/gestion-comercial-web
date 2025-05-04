@@ -43,15 +43,29 @@ async function iniciarServidor() {
   // Importar rutas
   const usuarioRoutes = require("./routes/usuarioRoutes");
   const arqueoRoutes = require("./routes/arqueoRoutes");
+      const tipoProductoRoutes = require("./routes/tipoProductoRoutes");
+      const productoRoutes = require("./routes/productoRoutes");
+      const movimientoInventarioRoutes = require("./routes/movimientoInventarioRoutes");
+      const pedidoRoutes = require("./routes/pedidoRoutes");
+      const detallePedidoRoutes = require("./routes/detallePedidoRoutes");
+      const movimientoCajaRoutes = require("./routes/movimientoCajaRoutes");
 
-  // Definir rutas
-  app.get("/", (req, res) => {
-    res.send("¡Backend de gestión comercial funcionando!");
-  });
+      // Definir rutas
+      app.get("/", (req, res) => {
+        res.send("¡Backend de gestión comercial funcionando!");
+      });
 
-  // Usar rutas de la API
-  app.use("/api/usuarios", usuarioRoutes);
-  app.use("/api/arqueos", arqueoRoutes);
+      // Usar rutas de la API
+      app.use("/api/usuarios", usuarioRoutes);
+      app.use("/api/arqueos", arqueoRoutes);
+      app.use("/api/tipos-producto", tipoProductoRoutes);
+      app.use("/api/productos", productoRoutes);
+      app.use("/api/inventario/movimientos", movimientoInventarioRoutes);
+      app.use("/api/pedidos", pedidoRoutes);
+      app.use("/api/detalle-pedidos", detallePedidoRoutes);
+      app.use("/api/movimientos-caja", movimientoCajaRoutes);
+
+
 
   // Middleware para manejo de errores
   app.use((err, req, res, next) => {

@@ -1,10 +1,11 @@
-// types/product.ts
-export interface ProductType {
+// src/types/product.ts
+
+export type TipoProducto = {
   id_tipo_producto: number;
   nombre: string;
-}
+};
 
-export interface Product {
+export type Producto = {
   id_producto: number;
   nombre: string;
   descripcion: string;
@@ -12,13 +13,17 @@ export interface Product {
   stock_actual: number;
   id_tipo_producto: number;
   activo: boolean;
-}
+};
 
-export interface InventoryMovement {
-  id_movimiento: number;
-  id_producto: number;
-  tipo_movimiento: 'Ingreso' | 'Egreso';
+export type ProductoStockUpdate = {
   cantidad: number;
-  fecha: string;
-  observaciones: string;
-}
+};
+
+export type ProductoCreateUpdate = {
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  stock_actual: number;
+  id_tipo_producto: number;
+  activo: boolean;
+};

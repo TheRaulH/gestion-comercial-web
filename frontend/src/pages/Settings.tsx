@@ -1,9 +1,7 @@
-import React, { Component } from 'react'
+import { Component } from "react";
 
 export default class Settings extends Component {
   render() {
-    return (
-      <div>Settings</div>
-    )
+    return <div>Settings</div>;
   }
 }

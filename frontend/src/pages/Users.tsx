@@ -124,7 +124,7 @@ export const Users = () => {
           mb: 3,
         }}
       >
-        <Typography variant="h4" component="h1">
+        <Typography variant="h4" component="h1" color="primary">
           Gestión de Usuarios
         </Typography>
         <Button

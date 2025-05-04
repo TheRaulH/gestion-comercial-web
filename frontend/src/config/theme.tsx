@@ -1,21 +1,28 @@
 // ./config/theme.js
-import { createTheme } from "@mui/material/styles";
+// theme.js
+import { createTheme } from '@mui/material/styles';
 
-export const theme = createTheme({
+const theme = createTheme({
   palette: {
+    mode: "light",
     primary: {
-      main: "#FF9800", // Naranja principal
+      main: "#c86208",
     },
     secondary: {
-      main: "#FF1744", // Rojo secundario
+      main: "#b5cae1",
     },
     background: {
-      default: "#000000", // Negro para el fondo por defecto
-      paper: "#1E1E1E", // Un tono de negro más claro para las superficies (papel)
+      default: "#e6eaed",
+      paper: "#05080f",
     },
     text: {
-      primary: "#FFFFFF", // Texto primario en blanco para contrastar con el negro
-      secondary: "#F5F5F5", // Un tono de blanco más claro para texto secundario
+      primary: "#455060",
+      secondary: "#b5cae1",
+    },
+    info: {
+      main: "#b5cae1",
     },
   },
 });
+
+export default theme;
