@@ -10,6 +10,7 @@ import {
 export const crearDetallePedido = async (
   data: DetallePedidoInput
 ): Promise<DetallePedido> => {
+  console.log("datos Nuevo detalle pedido:", data);
   const response = await apiClient.post("/detalle-pedidos", data);
   return response.data;
 };

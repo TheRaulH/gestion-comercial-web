@@ -4,6 +4,7 @@ import {
   CrearPedidoDTO,
   ActualizarEstadoDTO,
   ActualizarPedidoDTO,
+  PaymentMethod,
 } from "../types/pedidos";
 import {
   crearPedido,
@@ -22,13 +23,17 @@ type PedidoStore = {
   pedidoSeleccionado: Pedido | null;
   isLoading: boolean;
   error: string | null;
+  formaPagoSeleccionada: PaymentMethod | null; // Nuevo estado para la forma de pago
+  setFormaPagoSeleccionada: (formaPago: PaymentMethod | null) => void;
 
   fetchTodosPedidos: () => Promise<void>;
   fetchMisPedidos: () => Promise<void>;
   fetchPedidoPorId: (id: number) => Promise<void>;
   fetchPedidosPorArqueo: (idArqueo: number) => Promise<void>;
   fetchPedidosPorEstado: (estado: string) => Promise<void>;
-  crearNuevoPedido: (nuevo: CrearPedidoDTO) => Promise<Pedido>;
+  crearNuevoPedido: (
+    nuevo: Omit<CrearPedidoDTO, "forma_pago"> & { forma_pago: PaymentMethod }
+  ) => Promise<Pedido>; // Actualiza la firma
   cambiarEstadoPedido: (
     id: number,
     estado: ActualizarEstadoDTO
@@ -36,7 +41,9 @@ type PedidoStore = {
   cancelarUnPedido: (id: number) => Promise<void>;
   actualizarPedidoCompleto: (
     id: number,
-    data: ActualizarPedidoDTO
+    data: Omit<ActualizarPedidoDTO, "forma_pago"> & {
+      forma_pago?: PaymentMethod;
+    } // Actualiza la firma
   ) => Promise<void>;
 };
 
@@ -45,6 +52,9 @@ export const usePedidoStore = create<PedidoStore>((set) => ({
   pedidoSeleccionado: null,
   isLoading: false,
   error: null,
+  formaPagoSeleccionada: null, // Inicializa la forma de pago seleccionada
+  setFormaPagoSeleccionada: (formaPago) =>
+    set({ formaPagoSeleccionada: formaPago }),
 
   fetchTodosPedidos: async () => {
     set({ isLoading: true, error: null });
@@ -102,19 +112,18 @@ export const usePedidoStore = create<PedidoStore>((set) => ({
   },
 
   crearNuevoPedido: async (nuevo) => {
-  set({ isLoading: true, error: null });
-  try {
-    const pedidoCreado = await crearPedido(nuevo);
-    await usePedidoStore.getState().fetchMisPedidos();
-    return pedidoCreado; // 👈 RETORNAR EL PEDIDO
-  } catch (error) {
-    console.error("Error al crear pedido:", error);
-    set({ error: "Error al crear pedido", isLoading: false });
-    throw error; // 👈 También puedes relanzar el error para manejarlo externamente si hace falta
-  }
-},
-
-   
+    set({ isLoading: true, error: null });
+    try {
+      console.log("datos Nuevo pedido en store:", nuevo);
+      const pedidoCreado = await crearPedido(nuevo);
+      await usePedidoStore.getState().fetchMisPedidos();
+      return pedidoCreado; // 👈 RETORNAR EL PEDIDO
+    } catch (error) {
+      console.error("Error al crear pedido:", error);
+      set({ error: "Error al crear pedido", isLoading: false });
+      throw error; // 👈 También puedes relanzar el error para manejarlo externamente si hace falta
+    }
+  },
 
   cambiarEstadoPedido: async (id, estado) => {
     set({ isLoading: true, error: null });

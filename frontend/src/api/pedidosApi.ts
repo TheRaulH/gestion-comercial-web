@@ -12,6 +12,7 @@ import {
 export const crearPedido = async (
   nuevoPedido: CrearPedidoDTO
 ): Promise<Pedido> => {
+  console.log("datos Nuevo pedido:", nuevoPedido);
   const response = await apiClient.post<Pedido>("/pedidos", nuevoPedido);
   return response.data;
 };
