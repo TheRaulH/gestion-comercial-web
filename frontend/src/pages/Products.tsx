@@ -507,7 +507,7 @@ export const Products = () => {
                       (t) => t.id_tipo_producto === producto.id_tipo_producto
                     )?.nombre || "N/A"}
                   </TableCell>
-                  <TableCell>${producto.precio.toString()}</TableCell>
+                  <TableCell>{producto.precio.toString()} Bs.</TableCell>
                   <TableCell>
                     <Chip
                       label={producto.stock_actual}
