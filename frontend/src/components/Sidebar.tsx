@@ -21,7 +21,6 @@ import {
 import {
   Store as StoreIcon,
   Dashboard as DashboardIcon,
-  Inventory as InventoryIcon,
   Receipt as ReceiptIcon,
   PointOfSale as PointOfSaleIcon,
   Group as GroupIcon,
@@ -29,6 +28,10 @@ import {
   ChevronRight as ChevronRightIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
+  DocumentScanner,
+  Fastfood,
+  Sell,
+  SwapVerticalCircle,
 } from "@mui/icons-material";
 
 interface SidebarProps {
@@ -101,26 +104,26 @@ export const Sidebar = ({ mobileOpen, handleDrawerToggle }: SidebarProps) => {
 
   const mainMenuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
-    { text: "Products", icon: <InventoryIcon />, path: "/products" },
+    { text: "Products", icon: <Fastfood />, path: "/products" },
     {
       text: "Tipos de Productos",
-      icon: <InventoryIcon />,
+      icon: <Sell />,
       path: "/tipos-producto",
     },
     { text: "Orders", icon: <ReceiptIcon />, path: "/orders" },
-    { text: "Movements", icon: <ReceiptIcon />, path: "/movimientos" },
+    {
+      text: "Movements",
+      icon: <SwapVerticalCircle />,
+      path: "/movimientos",
+    },
     {
       text: "Cash Register",
       icon: <PointOfSaleIcon />,
       path: "/cash-register",
     },
-    {
-      text: "Movements Cash",
-      icon: <PointOfSaleIcon />,
-      path: "/movimientos-caja",
-    },
+
     { text: "Users", icon: <GroupIcon />, path: "/users" },
-    { text: "Admin Cash R.", icon: <ReceiptIcon />, path: "/CRAdmin" },
+    { text: "Admin Cash R.", icon: <DocumentScanner />, path: "/CRAdmin" },
   ];
 
   const secondaryMenuItems = [
