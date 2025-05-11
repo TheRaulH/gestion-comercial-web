@@ -4,12 +4,30 @@ class Pedido {
   // Crear un nuevo pedido
   static async crear(pedidoData) {
     try {
-      const { id_usuario, id_arqueo, total, estado = "Pendiente" } = pedidoData;
+      const {
+        id_usuario,
+        id_arqueo,
+        total,
+        forma_pago,
+        estado = "Pendiente",
+      } = pedidoData;
       const fecha_pedido = new Date(); // Fecha actual
 
+      const values = [
+        id_usuario,
+        id_arqueo,
+        fecha_pedido,
+        total,
+        forma_pago,
+        estado,
+      ];
+
+
+      console.log("Valores para la consulta SQL:", values); // <--- AGREGAR ESTA LÍNEA
+
       const [result] = await pool.execute(
-        "INSERT INTO pedidos (id_usuario, id_arqueo, fecha_pedido, total, estado) VALUES (?, ?, ?, ?, ?)",
-        [id_usuario, id_arqueo, fecha_pedido, total, estado]
+        "INSERT INTO pedidos (id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado) VALUES (?, ?, ?, ?, ?, ?)",
+        [id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado]
       );
 
       return {
@@ -18,6 +36,7 @@ class Pedido {
         id_arqueo,
         fecha_pedido,
         total,
+        forma_pago,
         estado,
       };
     } catch (error) {
@@ -92,10 +111,11 @@ class Pedido {
   // Actualizar pedido completo
   static async actualizar(id, pedidoData) {
     try {
-      const { id_usuario, id_arqueo, fecha_pedido, total, estado } = pedidoData;
+      const { id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado } =
+        pedidoData;
       const [result] = await pool.execute(
-        "UPDATE pedidos SET id_usuario = ?, id_arqueo = ?, fecha_pedido = ?, total = ?, estado = ? WHERE id_pedido = ?",
-        [id_usuario, id_arqueo, fecha_pedido, total, estado, id]
+        "UPDATE pedidos SET id_usuario = ?, id_arqueo = ?, fecha_pedido = ?, total = ?, forma_pago = ?, estado = ? WHERE id_pedido = ?",
+        [id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado, id]
       );
       return result.affectedRows > 0;
     } catch (error) {

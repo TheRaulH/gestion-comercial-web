@@ -4,12 +4,20 @@ const pedidoController = {
   // Crear un nuevo pedido
   async crearPedido(req, res) {
     try {
-      const { id_arqueo, total, estado } = req.body;
+      const { id_arqueo, total, forma_pago, estado } = req.body; // <--- You correctly get forma_pago from req.body here
       const id_usuario = req.usuario.id; // Obtener del token JWT
 
       // Validar datos
-      if (!id_arqueo || !total) {
-        return res.status(400).json({ mensaje: "Faltan campos requeridos" });
+      if (!id_arqueo || !total || !forma_pago) {
+        return res.status(400).json({
+          mensaje: "Faltan campos requeridos: id_arqueo, total, forma_pago",
+        });
+      }
+
+      // Validar forma de pago
+      const formasPagoValidas = ["Efectivo", "Tarjeta", "QR"];
+      if (!formasPagoValidas.includes(forma_pago)) {
+        return res.status(400).json({ mensaje: "Forma de pago no válida" });
       }
 
       // Crear el pedido
@@ -17,6 +25,7 @@ const pedidoController = {
         id_usuario,
         id_arqueo,
         total,
+        forma_pago,
         estado,
       });
 
@@ -134,7 +143,8 @@ const pedidoController = {
   async actualizarPedido(req, res) {
     try {
       const { id } = req.params;
-      const { id_usuario, id_arqueo, fecha_pedido, total, estado } = req.body;
+      const { id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado } =
+        req.body;
 
       // Verificar que el pedido existe
       const pedidoExistente = await Pedido.obtenerPorId(id);
@@ -143,10 +153,24 @@ const pedidoController = {
       }
 
       // Validar datos
-      if (!id_usuario || !id_arqueo || !fecha_pedido || !total || !estado) {
-        return res
-          .status(400)
-          .json({ mensaje: "Todos los campos son obligatorios" });
+      if (
+        !id_usuario ||
+        !id_arqueo ||
+        !fecha_pedido ||
+        !total ||
+        !forma_pago ||
+        !estado
+      ) {
+        return res.status(400).json({
+          mensaje:
+            "Todos los campos son obligatorios: id_usuario, id_arqueo, fecha_pedido, total, forma_pago, estado",
+        });
+      }
+
+      // Validar forma de pago
+      const formasPagoValidas = ["Efectivo", "Tarjeta", "QR"];
+      if (!formasPagoValidas.includes(forma_pago)) {
+        return res.status(400).json({ mensaje: "Forma de pago no válida" });
       }
 
       // Actualizar pedido
@@ -155,6 +179,7 @@ const pedidoController = {
         id_arqueo,
         fecha_pedido,
         total,
+        forma_pago,
         estado,
       });
 
@@ -178,13 +203,6 @@ const pedidoController = {
       const pedido = await Pedido.obtenerPorId(id);
       if (!pedido) {
         return res.status(404).json({ mensaje: "Pedido no encontrado" });
-      }
-
-      // Verificar si el usuario puede cancelar el pedido
-      if (pedido.id_usuario !== req.usuario.id && !req.usuario.esAdmin) {
-        return res
-          .status(403)
-          .json({ mensaje: "No tiene permisos para cancelar este pedido" });
       }
 
       // Verificar que el pedido no esté ya entregado
