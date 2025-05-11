@@ -8,14 +8,12 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Badge,
   Box,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
-  Notifications,
   AccountCircle,
   Logout,
   Settings,
@@ -30,7 +28,7 @@ interface NavbarProps {
 
 export const Navbar = ({ toggleSidebar }: NavbarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -86,12 +84,6 @@ export const Navbar = ({ toggleSidebar }: NavbarProps) => {
           </Typography>
 
           <Box className="flex items-center gap-2">
-            <IconButton color="inherit" className="relative">
-              <Badge badgeContent={4} color="error">
-                <Notifications />
-              </Badge>
-            </IconButton>
-
             <div>
               <IconButton
                 size="large"
