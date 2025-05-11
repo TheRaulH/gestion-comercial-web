@@ -80,6 +80,7 @@ async function crearTablas() {
         id_arqueo INT NOT NULL,
         fecha_pedido DATETIME NOT NULL,
         total DECIMAL(10,2) NOT NULL,
+        forma_pago ENUM('Efectivo', 'Tarjeta', 'QR') NOT NULL,
         estado ENUM('Pendiente', 'En cocina', 'Entregado', 'Cancelado') DEFAULT 'Pendiente',
         FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
         FOREIGN KEY (id_arqueo) REFERENCES arqueos_caja(id_arqueo)
@@ -167,6 +168,91 @@ async function crearUsuariosIniciales() {
     return false;
   }
 }
+// Función para crear datos iniciales de tipos de producto y productos
+async function crearDatosInicialesProductos() {
+  try {
+    // Comprobar si ya existen tipos de producto
+    const [tipos] = await pool.query(
+      "SELECT COUNT(*) as count FROM tipos_producto"
+    );
+
+    if (tipos[0].count === 0) {
+      console.log("ℹ️ No existen tipos de producto, procediendo a crearlos..."); // Insertar tipos de producto
+
+      await pool.query(`
+        INSERT INTO tipos_producto (nombre) VALUES
+        ('Platos Principales'),
+        ('Guarniciones'),
+        ('Bebidas')
+      `);
+      console.log("✓ Tipos de producto iniciales creados"); // Obtener los IDs de los tipos de producto recién insertados
+
+      const [tiposInsertados] = await pool.query(
+        "SELECT id_tipo_producto, nombre FROM tipos_producto WHERE nombre IN ('Platos Principales', 'Guarniciones', 'Bebidas')"
+      );
+
+      const tipoIds = {};
+      tiposInsertados.forEach((tipo) => {
+        tipoIds[tipo.nombre] = tipo.id_tipo_producto;
+      }); // Comprobar si ya existen productos antes de insertar
+
+      const [productos] = await pool.query(
+        "SELECT COUNT(*) as count FROM productos"
+      );
+
+      if (productos[0].count === 0) {
+        console.log("ℹ️ No existen productos, procediendo a crearlos..."); // Insertar productos de ejemplo, usando los IDs obtenidos
+        await pool.query(
+          `
+          INSERT INTO productos (nombre, descripcion, precio, id_tipo_producto, stock_actual) VALUES
+          ('Pollo a la Broster', 'Delicioso pollo frito crujiente', 35.00, ?, 100),
+          ('Pollo al Spiedo', 'Pollo asado a las brasas', 32.00, ?, 80),
+          ('Majadito Batido', 'Arroz con carne desmenuzada y plátano frito', 28.00, ?, 50),
+          ('Lomito de Res', 'Tiras de lomito salteado con verduras', 40.00, ?, 40),
+          ('Hamburguesa Clásica', 'Hamburguesa con carne, queso y vegetales', 20.00, ?, 120),
+          ('Salchipapa Simple', 'Salchichas con papas fritas', 15.00, ?, 150),
+          ('Papas Fritas', 'Porción de papas fritas', 10.00, ?, 200),
+          ('Arroz', 'Porción de arroz', 8.00, ?, 180),
+          ('Yuca Frita', 'Porción de yuca frita', 12.00, ?, 90),
+          ('Coca-Cola', 'Refresco Coca-Cola', 7.00, ?, 300),
+          ('Agua Mineral', 'Botella de agua', 5.00, ?, 250),
+          ('Jugo Natural', 'Jugo del día (ej. Naranja)', 9.00, ?, 70)
+        `,
+          [
+            tipoIds["Platos Principales"], // Pollo Broster
+            tipoIds["Platos Principales"], // Pollo Spiedo
+            tipoIds["Platos Principales"], // Majadito
+            tipoIds["Platos Principales"], // Lomito
+            tipoIds["Platos Principales"], // Hamburguesa
+            tipoIds["Platos Principales"], // Salchipapa (considerado plato principal en algunos locales)
+            tipoIds["Guarniciones"], // Papas Fritas
+            tipoIds["Guarniciones"], // Arroz
+            tipoIds["Guarniciones"], // Yuca Frita
+            tipoIds["Bebidas"], // Coca-Cola
+            tipoIds["Bebidas"], // Agua Mineral
+            tipoIds["Bebidas"], // Jugo Natural
+          ]
+        );
+        console.log("✓ Productos iniciales creados");
+      } else {
+        console.log(
+          "ℹ️ Ya existen productos en la base de datos, omitiendo creación de productos iniciales"
+        );
+      }
+
+      console.log("✅ Datos iniciales de productos creados correctamente");
+      return true;
+    } else {
+      console.log(
+        "ℹ️ Ya existen tipos de producto en la base de datos, omitiendo creación de datos iniciales de productos"
+      );
+      return true;
+    }
+  } catch (error) {
+    console.error("Error al crear datos iniciales de productos:", error);
+    return false;
+  }
+}
 
 // Función para inicializar la base de datos
 async function inicializarBaseDeDatos() {
@@ -197,6 +283,12 @@ async function inicializarBaseDeDatos() {
   // Crear usuarios iniciales
   const usuariosCreados = await crearUsuariosIniciales();
   if (!usuariosCreados) {
+    return false;
+  }
+
+  // Crear datos iniciales de productos y tipos de producto
+  const productosCreados = await crearDatosInicialesProductos();
+  if (!productosCreados) {
     return false;
   }
 
